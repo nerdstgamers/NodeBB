@@ -86,6 +86,7 @@
         "nodebb-plugin-emoji-android": "2.0.0",
         "nodebb-plugin-markdown": "8.11.2",
         "nodebb-plugin-mentions": "2.7.4",
+        "nodebb-plugin-session-sharing": "^4.6.8",
         "nodebb-plugin-soundpack-default": "1.0.0",
         "nodebb-plugin-spam-be-gone": "0.7.1",
         "nodebb-plugin-write-api": "^5.7.5",
