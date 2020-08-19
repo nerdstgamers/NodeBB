@@ -32,6 +32,10 @@
 	"view-profile": "プロフィールを見る",
 	"start-new-chat": "新しいチャットを開始",
 	"go-to-target": "フラグのターゲットを表示",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "プロフィールを見る",
 	"user-edit": "プロフィールを編集",
@@ -41,7 +45,6 @@
 	"no-notes": "共有ノートはありません。",
 
 	"history": "Account &amp; Flag History",
-	"back": "フラグリストに戻る",
 	"no-history": "フラグ履歴がありません",
 
 	"state-all": "全ての状態",

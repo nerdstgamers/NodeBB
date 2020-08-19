@@ -32,6 +32,10 @@
 	"view-profile": "查看个人资料",
 	"start-new-chat": "开始新会话",
 	"go-to-target": "查看举报目标",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "查看资料",
 	"user-edit": "编辑资料",
@@ -41,7 +45,6 @@
 	"no-notes": "没有共享的备注内容。",
 
 	"history": "Account &amp; Flag History",
-	"back": "返回举报列表",
 	"no-history": "没有举报历史。",
 
 	"state-all": "所有状态",

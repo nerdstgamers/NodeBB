@@ -1,14 +1,19 @@
 'use strict';
 
+const validator = require('validator');
+
+const db = require('../database');
 const user = require('../user');
+const topics = require('../topics');
 const categories = require('../categories');
 const flags = require('../flags');
 const analytics = require('../analytics');
 const plugins = require('../plugins');
 const pagination = require('../pagination');
+const privileges = require('../privileges');
 const utils = require('../utils');
+const helpers = require('./helpers');
 
-const adminPostQueueController = require('./admin/postqueue');
 const modsController = module.exports;
 modsController.flags = {};
 
@@ -90,6 +95,7 @@ modsController.flags.list = async function (req, res, next) {
 		filters: filters,
 		title: '[[pages:flags]]',
 		pagination: pagination.create(flagsData.page, flagsData.pageCount, req.query),
+		breadcrumbs: helpers.buildBreadcrumbs([{ text: '[[pages:flags]]' }]),
 	});
 };
 
@@ -100,7 +106,9 @@ modsController.flags.detail = async function (req, res, next) {
 		flagData: flags.get(req.params.flagId),
 		assignees: user.getAdminsandGlobalModsandModerators(),
 		categories: categories.buildForSelect(req.uid, 'read'),
+		privileges: Promise.all(['global', 'admin'].map(async type => privileges[type].get(req.uid))),
 	});
+	results.privileges = { ...results.privileges[0], ...results.privileges[1] };
 
 	if (!results.flagData) {
 		return next(new Error('[[error:invalid-data]]'));
@@ -134,6 +142,11 @@ modsController.flags.detail = async function (req, res, next) {
 		title: '[[pages:flag-details, ' + req.params.flagId + ']]',
 		categories: results.categories,
 		filters: req.session.flags_filters || [],
+		privileges: results.privileges,
+		breadcrumbs: helpers.buildBreadcrumbs([
+			{ text: '[[pages:flags]]', url: '/flags' },
+			{ text: '[[pages:flag-details, ' + req.params.flagId + ']]' },
+		]),
 	}));
 };
 
@@ -159,9 +172,71 @@ function filterCategories(moderatedCids, categories) {
 }
 
 modsController.postQueue = async function (req, res, next) {
+	// Admins, global mods, and individual mods only
 	const isPrivileged = await user.isPrivileged(req.uid);
 	if (!isPrivileged) {
 		return next();
 	}
-	await adminPostQueueController.get(req, res, next);
+
+	const page = parseInt(req.query.page, 10) || 1;
+	const postsPerPage = 20;
+
+	const [ids, isAdminOrGlobalMod, moderatedCids] = await Promise.all([
+		db.getSortedSetRange('post:queue', 0, -1),
+		user.isAdminOrGlobalMod(req.uid),
+		user.getModeratedCids(req.uid),
+	]);
+
+	let postData = await getQueuedPosts(ids);
+	postData = postData.filter(p => p && (isAdminOrGlobalMod || moderatedCids.includes(String(p.category.cid))));
+
+	const pageCount = Math.max(1, Math.ceil(postData.length / postsPerPage));
+	const start = (page - 1) * postsPerPage;
+	const stop = start + postsPerPage - 1;
+	postData = postData.slice(start, stop + 1);
+
+	res.render('admin/manage/post-queue', {
+		title: '[[pages:post-queue]]',
+		posts: postData,
+		pagination: pagination.create(page, pageCount),
+		breadcrumbs: helpers.buildBreadcrumbs([{ text: '[[pages:post-queue]]' }]),
+	});
 };
+
+async function getQueuedPosts(ids) {
+	const keys = ids.map(id => 'post:queue:' + id);
+	const postData = await db.getObjects(keys);
+	postData.forEach(function (data) {
+		if (data) {
+			data.data = JSON.parse(data.data);
+			data.data.timestampISO = utils.toISOString(data.data.timestamp);
+		}
+	});
+	const uids = postData.map(data => data && data.uid);
+	const userData = await user.getUsersFields(uids, ['username', 'userslug', 'picture']);
+	postData.forEach(function (postData, index) {
+		if (postData) {
+			postData.user = userData[index];
+			postData.data.rawContent = validator.escape(String(postData.data.content));
+			postData.data.title = validator.escape(String(postData.data.title || ''));
+		}
+	});
+
+	await Promise.all(postData.map(p => addMetaData(p)));
+	return postData;
+}
+
+async function addMetaData(postData) {
+	if (!postData) {
+		return;
+	}
+	postData.topic = { cid: 0 };
+	if (postData.data.cid) {
+		postData.topic = { cid: postData.data.cid };
+	} else if (postData.data.tid) {
+		postData.topic = await topics.getTopicFields(postData.data.tid, ['title', 'cid']);
+	}
+	postData.category = await categories.getCategoryData(postData.topic.cid);
+	const result = await plugins.fireHook('filter:parse.post', { postData: postData.data });
+	postData.data.content = result.postData.content;
+}

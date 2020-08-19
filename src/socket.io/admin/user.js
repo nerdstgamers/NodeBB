@@ -89,7 +89,7 @@ User.sendValidationEmail = async function (socket, uids) {
 	}
 
 	await async.eachLimit(uids, 50, async function (uid) {
-		await user.email.sendValidationEmail(uid);
+		await user.email.sendValidationEmail(uid, { force: true });
 	});
 };
 
@@ -122,13 +122,27 @@ User.forcePasswordReset = async function (socket, uids) {
 
 User.deleteUsers = async function (socket, uids) {
 	deleteUsers(socket, uids, async function (uid) {
-		await user.deleteAccount(uid);
+		return await user.deleteAccount(uid);
 	});
+};
+
+User.deleteUsersContent = async function (socket, uids) {
+	if (!Array.isArray(uids)) {
+		throw new Error('[[error:invalid-data]]');
+	}
+	const isMembers = await groups.isMembers(uids, 'administrators');
+	if (isMembers.includes(true)) {
+		throw new Error('[[error:cant-delete-other-admins]]');
+	}
+
+	await Promise.all(uids.map(async (uid) => {
+		await user.deleteContent(socket.uid, uid);
+	}));
 };
 
 User.deleteUsersAndContent = async function (socket, uids) {
 	deleteUsers(socket, uids, async function (uid) {
-		await user.delete(socket.uid, uid);
+		return await user.delete(socket.uid, uid);
 	});
 };
 
@@ -159,11 +173,12 @@ async function deleteUsers(socket, uids, method) {
 	try {
 		await Promise.all(uids.map(uid => doDelete(uid)));
 	} catch (err) {
-		winston.error(err);
+		winston.error(err.stack);
 	}
 }
 
 User.search = async function (socket, data) {
+	// TODO: deprecate
 	const searchData = await user.search({
 		query: data.query,
 		searchBy: data.searchBy,

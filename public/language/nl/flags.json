@@ -27,11 +27,15 @@
 	"filter-cid-all": "Alle categorieën",
 	"apply-filters": "Filters toepassen",
 
-	"quick-actions": "Quick Actions",
+	"quick-actions": "Snelle acties",
 	"flagged-user": "Gemarkeerde gebruiker",
 	"view-profile": "Profiel bekijken",
 	"start-new-chat": "Begin een nieuwe chat",
 	"go-to-target": "Bekijk markering doel",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Profiel bekijken",
 	"user-edit": "Profiel wijzigen",
@@ -40,8 +44,7 @@
 	"add-note": "Notitie toevoegen",
 	"no-notes": "Geen gedeelde notities",
 
-	"history": "Account &amp; Flag History",
-	"back": "Terug naar Markeringen lijst",
+	"history": "Account &amp; markering geschiedenis",
 	"no-history": "Geen markering geschiedenis",
 
 	"state-all": "Alle statussen",

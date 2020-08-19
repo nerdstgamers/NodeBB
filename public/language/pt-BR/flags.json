@@ -32,6 +32,10 @@
 	"view-profile": "Ver Perfil",
 	"start-new-chat": "Iniciar Novo Chat",
 	"go-to-target": "Ver o Sinalizado",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Ver Perfil",
 	"user-edit": "Editar Perfil",
@@ -41,7 +45,6 @@
 	"no-notes": "Nenhuma nota compartilhada.",
 
 	"history": "Account &amp; Flag History",
-	"back": "Voltar à Lista de Sinaliações",
 	"no-history": "Sem histórico de sinalizações.",
 
 	"state-all": "Todos os estados",

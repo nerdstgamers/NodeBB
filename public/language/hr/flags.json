@@ -32,6 +32,10 @@
 	"view-profile": "Pogledaj profil",
 	"start-new-chat": "Pokreni novi razgovor",
 	"go-to-target": "Pogledaj metu zastave",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Pogledaj profil",
 	"user-edit": "Uredi profil",
@@ -41,7 +45,6 @@
 	"no-notes": "Nema podijeljenih bilješki",
 
 	"history": "Account &amp; Flag History",
-	"back": "Nazad na popis zastava",
 	"no-history": "Nema povijesti zastava.",
 
 	"state-all": "Sva stanja",

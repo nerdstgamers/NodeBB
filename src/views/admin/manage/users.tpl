@@ -17,11 +17,12 @@
 						<li><a href="#" class="manage-groups"><i class="fa fa-fw fa-users"></i> [[admin/manage/users:manage-groups]]</a></li>
 						<li class="divider"></li>
 						<li><a href="#" class="ban-user"><i class="fa fa-fw fa-gavel"></i> [[admin/manage/users:ban]]</a></li>
-						<li><a href="#" class="ban-user-temporary"><i class="fa fa-fw fa-clock-o"></i>[[admin/manage/users:temp-ban]]</a></li>
+						<li><a href="#" class="ban-user-temporary"><i class="fa fa-fw fa-clock-o"></i> [[admin/manage/users:temp-ban]]</a></li>
 						<li><a href="#" class="unban-user"><i class="fa fa-fw fa-comment-o"></i> [[admin/manage/users:unban]]</a></li>
 						<li><a href="#" class="reset-lockout"><i class="fa fa-fw fa-unlock"></i> [[admin/manage/users:reset-lockout]]</a></li>
 						<li class="divider"></li>
 						<li><a href="#" class="delete-user"><i class="fa fa-fw fa-trash-o"></i> [[admin/manage/users:delete]]</a></li>
+						<li><a href="#" class="delete-user-content"><i class="fa fa-fw fa-trash-o"></i> [[admin/manage/users:delete-content]]</a></li>
 						<li><a href="#" class="delete-user-and-content"><i class="fa fa-fw fa-trash-o"></i> [[admin/manage/users:purge]]</a></li>
 					</ul>
 				</div>
@@ -56,23 +57,26 @@
 			<form class="form-inline">
 				<div class="form-group">
 					<label>[[admin/manage/users:search.uid]]</label>
-					<input class="form-control" id="search-user-uid" data-search-type="uid" type="number" placeholder="[[admin/manage/users:search.uid-placeholder]]"/><br />
+					<input class="form-control" id="search-user-uid" data-search-type="uid" type="number" placeholder="[[admin/manage/users:search.uid-placeholder]]" value="{uidQuery}"/>
 				</div>
 				<div class="form-group">
 					<label>[[admin/manage/users:search.username]]</label>
-					<input class="form-control" id="search-user-name" data-search-type="username" type="text" placeholder="[[admin/manage/users:search.username-placeholder]]"/><br />
+					<input class="form-control" id="search-user-name" data-search-type="username" type="text" placeholder="[[admin/manage/users:search.username-placeholder]]" value="{usernameQuery}"/>
 				</div>
 				<div class="form-group">
 					<label>[[admin/manage/users:search.email]]</label>
-					<input class="form-control" id="search-user-email" data-search-type="email" type="text" placeholder="[[admin/manage/users:search.email-placeholder]]"/><br />
+					<input class="form-control" id="search-user-email" data-search-type="email" type="text" placeholder="[[admin/manage/users:search.email-placeholder]]" value="{emailQuery}"/>
 				</div>
 				<div class="form-group">
 					<label>[[admin/manage/users:search.ip]]</label>
-					<input class="form-control" id="search-user-ip" data-search-type="ip" type="text" placeholder="[[admin/manage/users:search.ip-placeholder]]"/><br />
+					<input class="form-control" id="search-user-ip" data-search-type="ip" type="text" placeholder="[[admin/manage/users:search.ip-placeholder]]" value="{ipQuery}"/>
 				</div>
 			</form>
 			<i class="fa fa-spinner fa-spin hidden"></i>
-			<span id="user-notfound-notify" class="label label-danger hide">[[admin/manage/users:search.not-found]]</span><br/>
+
+			<div id="user-found-notify" class="label label-info {{{if !matchCount}}}hidden{{{end}}}">[[admin/manage/users:alerts.x-users-found, {matchCount}, {timing}]]</div>
+
+			<div id="user-notfound-notify" class="label label-danger {{{if !query}}}hidden{{{end}}} {{{if matchCount}}}hidden{{{end}}}">[[admin/manage/users:search.not-found]]</div>
 		</div>
 
 		<!-- IF inactive -->

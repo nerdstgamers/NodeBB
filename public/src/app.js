@@ -6,6 +6,7 @@ app = window.app || {};
 app.isFocused = true;
 app.currentRoom = null;
 app.widgets = {};
+app.flags = {};
 app.cacheBuster = null;
 
 (function () {
@@ -59,6 +60,7 @@ app.cacheBuster = null;
 
 		$('#header-menu .container').on('click', '[component="user/logout"]', function () {
 			app.logout();
+			return false;
 		});
 
 		Visibility.change(function (event, state) {
@@ -116,6 +118,9 @@ app.cacheBuster = null;
 			headers: {
 				'x-csrf-token': config.csrf_token,
 			},
+			beforeSend: function () {
+				app.flags._logout = true;
+			},
 			success: function (data) {
 				$(window).trigger('action:app.loggedOut', data);
 				if (redirect) {
@@ -168,6 +173,10 @@ app.cacheBuster = null;
 	};
 
 	app.handleInvalidSession = function () {
+		if (app.flags._logout) {
+			return;
+		}
+
 		socket.disconnect();
 		bootbox.alert({
 			title: '[[error:invalid-session]]',
@@ -275,25 +284,25 @@ app.cacheBuster = null;
 
 		function showAlert(type, message) {
 			switch (messages[type].format) {
-			case 'alert':
-				app.alert({
-					type: 'success',
-					title: messages[type].title,
-					message: messages[type].message,
-					timeout: 5000,
-				});
-				break;
+				case 'alert':
+					app.alert({
+						type: 'success',
+						title: messages[type].title,
+						message: messages[type].message,
+						timeout: 5000,
+					});
+					break;
 
-			case 'modal':
-				require(['translator'], function (translator) {
-					translator.translate(message || messages[type].message, function (translated) {
-						bootbox.alert({
-							title: messages[type].title,
-							message: translated,
+				case 'modal':
+					require(['translator'], function (translator) {
+						translator.translate(message || messages[type].message, function (translated) {
+							bootbox.alert({
+								title: messages[type].title,
+								message: translated,
+							});
 						});
 					});
-				});
-				break;
+					break;
 			}
 		}
 
@@ -444,7 +453,7 @@ app.cacheBuster = null;
 	app.toggleNavbar = function (state) {
 		var navbarEl = $('.navbar');
 		if (navbarEl) {
-			navbarEl.toggleClass('hidden', !state);
+			navbarEl[state ? 'show' : 'hide']();
 		}
 	};
 
@@ -477,34 +486,91 @@ app.cacheBuster = null;
 	}
 
 	app.enableTopicSearch = function (options) {
-		var quickSearchResults = options.resultEl;
-		var inputEl = options.inputEl;
+		/* eslint-disable-next-line */
+		var searchOptions = Object.assign({ in: 'titles' }, options.searchOptions);
+		var quickSearchResults = options.searchElements.resultEl;
+		var inputEl = options.searchElements.inputEl;
 		var searchTimeoutId = 0;
-		var currentVal = inputEl.val();
+		var oldValue = inputEl.val();
+
+		function doSearch() {
+			require(['search'], function (search) {
+				/* eslint-disable-next-line */
+				options.searchOptions = Object.assign({}, searchOptions);
+				options.searchOptions.term = inputEl.val();
+				$(window).trigger('action:search.quick.start', options);
+				options.searchOptions.searchOnly = 1;
+				search.api(options.searchOptions, function (data) {
+					var resultEl = options.searchElements.resultEl;
+					if (options.hideOnNoMatches && !data.posts.length) {
+						return resultEl.addClass('hidden').find('.quick-search-results-container').html('');
+					}
+					data.posts.forEach(function (p) {
+						var text = $('<div>' + p.content + '</div>').text();
+						var start = Math.max(0, text.toLowerCase().indexOf(inputEl.val().toLowerCase()) - 40);
+						p.snippet = utils.escapeHTML((start > 0 ? '...' : '') +
+							text.slice(start, start + 80) +
+							(text.length - start > 80 ? '...' : ''));
+					});
+					app.parseAndTranslate('partials/quick-search-results', data, function (html) {
+						if (html.length) {
+							html.find('.timeago').timeago();
+						}
+						resultEl.toggleClass('hidden', !html.length)
+							.find('.quick-search-results-container')
+							.html(html.length ? html : '');
+						$(window).trigger('action:search.quick.complete', {
+							data: data,
+							options: options,
+						});
+					});
+				});
+			});
+		}
+
 		inputEl.off('keyup').on('keyup', function () {
 			if (searchTimeoutId) {
 				clearTimeout(searchTimeoutId);
 				searchTimeoutId = 0;
 			}
 			searchTimeoutId = setTimeout(function () {
-				if (inputEl.val().length < 3 || inputEl.val() === currentVal) {
+				if (inputEl.val().length < 3) {
+					quickSearchResults.addClass('hidden');
+					oldValue = inputEl.val();
 					return;
 				}
-				currentVal = inputEl.val();
+				if (inputEl.val() === oldValue) {
+					return;
+				}
+				oldValue = inputEl.val();
 				if (!inputEl.is(':focus')) {
 					return quickSearchResults.addClass('hidden');
 				}
-				require(['search'], function (search) {
-					search.quick({
-						term: inputEl.val(),
-						in: 'titles',
-					}, options);
-				});
+				doSearch();
 			}, 250);
+		});
+
+		inputEl.on('blur', function () {
+			setTimeout(function () {
+				if (!inputEl.is(':focus')) {
+					quickSearchResults.addClass('hidden');
+				}
+			}, 200);
+		});
+
+		inputEl.on('focus', function () {
+			if (inputEl.val() && quickSearchResults.find('#quick-search-results').children().length) {
+				quickSearchResults.removeClass('hidden');
+			}
+		});
+
+		inputEl.off('refresh').on('refresh', function () {
+			doSearch();
 		});
 	};
 
-	app.handleSearch = function () {
+	app.handleSearch = function (searchOptions) {
+		searchOptions = searchOptions || { in: 'titles' };
 		var searchButton = $('#search-button');
 		var searchFields = $('#search-fields');
 		var searchInput = $('#search-fields input');
@@ -518,23 +584,21 @@ app.cacheBuster = null;
 			searchInput.blur();
 		});
 		searchInput.off('blur').on('blur', dismissSearch);
-		searchInput.off('focus').on('focus', function () {
-			if (searchInput.val() && quickSearchContainer.find('#quick-search-results').children().length) {
-				quickSearchContainer.removeClass('hidden');
-			}
-		});
+		searchInput.off('focus');
 
-		app.enableTopicSearch({
+		var searchElements = {
 			inputEl: searchInput,
 			resultEl: quickSearchContainer,
+		};
+
+		app.enableTopicSearch({
+			searchOptions: searchOptions,
+			searchElements: searchElements,
 		});
 
 		function dismissSearch() {
 			searchFields.addClass('hidden');
 			searchButton.removeClass('hidden');
-			setTimeout(function () {
-				quickSearchContainer.addClass('hidden');
-			}, 200);
 		}
 
 		searchButton.off('click').on('click', function (e) {
@@ -557,7 +621,10 @@ app.cacheBuster = null;
 			require(['search'], function (search) {
 				var data = search.getSearchPreferences();
 				data.term = input.val();
-				$(window).trigger('action:search.submit', { data: data });
+				$(window).trigger('action:search.submit', {
+					searchOptions: data,
+					searchElements: searchElements,
+				});
 				search.query(data, function () {
 					input.val('');
 				});

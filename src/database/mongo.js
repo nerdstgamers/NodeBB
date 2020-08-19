@@ -167,8 +167,8 @@ mongoModule.close = function (callback) {
 };
 
 mongoModule.socketAdapter = function () {
-	const mongoAdapter = require('socket.io-adapter-mongo');
-	return mongoAdapter(connection.getConnectionString());
+	const mongoAdapter = require('@nodebb/socket.io-adapter-mongo');
+	return mongoAdapter(connection.getConnectionString(), connection.getConnectionOptions());
 };
 
 require('./mongo/main')(mongoModule);

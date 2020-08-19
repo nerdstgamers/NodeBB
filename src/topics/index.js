@@ -86,7 +86,7 @@ Topics.getTopicsByTids = async function (tids, options) {
 		user.getSettings(uid),
 		user.getUsersFields(uids, ['uid', 'username', 'fullname', 'userslug', 'reputation', 'postcount', 'picture', 'signature', 'banned', 'status']),
 		user.getMultipleUserSettings(uids),
-		categories.getCategoriesFields(cids, ['cid', 'name', 'slug', 'icon', 'image', 'imageClass', 'bgColor', 'color', 'disabled']),
+		categories.getCategoriesFields(cids, ['cid', 'name', 'slug', 'icon', 'backgroundImage', 'imageClass', 'bgColor', 'color', 'disabled']),
 		Topics.hasReadTopics(tids, uid),
 		Topics.isIgnoring(tids, uid),
 		Topics.getUserBookmarks(tids, uid),
@@ -160,6 +160,8 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
 	topicData.posts = posts;
 	topicData.category = category;
 	topicData.tagWhitelist = tagWhitelist[0];
+	topicData.minTags = category.minTags;
+	topicData.maxTags = category.maxTags;
 	topicData.thread_tools = threadTools.tools;
 	topicData.isFollowing = followData[0].following;
 	topicData.isNotFollowing = !followData[0].following && !followData[0].ignoring;

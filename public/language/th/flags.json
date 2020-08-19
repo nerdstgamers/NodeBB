@@ -32,6 +32,10 @@
 	"view-profile": "ดูโปรไฟล์",
 	"start-new-chat": "เริ่มแชทใหม่",
 	"go-to-target": "ดูเป้าหมายการปักธง",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "ดูโปรไฟล์",
 	"user-edit": "แก้ไขโปรไฟล์",
@@ -41,7 +45,6 @@
 	"no-notes": "ไม่มีโน้ตที่แชร์",
 
 	"history": "Account &amp; Flag History",
-	"back": "กลับไปยังรายการปักธง",
 	"no-history": "ไม่มีประวัติปักธง",
 
 	"state-all": "สถานะทั้งหมด",

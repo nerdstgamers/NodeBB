@@ -32,6 +32,10 @@
 	"view-profile": "Zobrazit profil",
 	"start-new-chat": "Začít novou konverzaci",
 	"go-to-target": "Zobrazit cílové označení",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Zobrazit profil",
 	"user-edit": "Upravit profil",
@@ -41,7 +45,6 @@
 	"no-notes": "Žádné sdílené poznámky.",
 
 	"history": "Account &amp; Flag History",
-	"back": "Zpět k seznamu označení",
 	"no-history": "Žádná historie označení.",
 
 	"state-all": "Všechny stavy",

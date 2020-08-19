@@ -5,6 +5,8 @@ const path = require('path');
 const SwaggerParser = require('@apidevtools/swagger-parser');
 const request = require('request-promise-native');
 const nconf = require('nconf');
+const util = require('util');
+const wait = util.promisify(setTimeout);
 
 const db = require('./mocks/databasemock');
 const helpers = require('./helpers');
@@ -15,6 +17,7 @@ const topics = require('../src/topics');
 const plugins = require('../src/plugins');
 const flags = require('../src/flags');
 const messaging = require('../src/messaging');
+const socketUser = require('../src/socket.io/user');
 
 describe('Read API', async () => {
 	let readApi = false;
@@ -57,6 +60,13 @@ describe('Read API', async () => {
 
 		// Create a new chat room
 		await messaging.newRoom(1, [2]);
+
+		// export data for admin user
+		await socketUser.exportProfile({ uid: adminUid }, { uid: adminUid });
+		await socketUser.exportPosts({ uid: adminUid }, { uid: adminUid });
+		await socketUser.exportUploads({ uid: adminUid }, { uid: adminUid });
+		// wait for export child process to complete
+		await wait(20000);
 
 		// Attach a search hook so /api/search is enabled
 		plugins.registerHook('core', {
@@ -120,35 +130,35 @@ describe('Read API', async () => {
 					assert(response[prop] !== null, '"' + prop + '" was null, but schema does not specify it to be a nullable property (path: ' + path + ', context: ' + context + ')');
 
 					switch (schema[prop].type) {
-					case 'string':
-						assert.strictEqual(typeof response[prop], 'string', '"' + prop + '" was expected to be a string, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
-						break;
-					case 'boolean':
-						assert.strictEqual(typeof response[prop], 'boolean', '"' + prop + '" was expected to be a boolean, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
-						break;
-					case 'object':
-						assert.strictEqual(typeof response[prop], 'object', '"' + prop + '" was expected to be an object, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
-						compare(schema[prop], response[prop], context ? [context, prop].join('.') : prop);
-						break;
-					case 'array':
-						assert.strictEqual(Array.isArray(response[prop]), true, '"' + prop + '" was expected to be an array, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
+						case 'string':
+							assert.strictEqual(typeof response[prop], 'string', '"' + prop + '" was expected to be a string, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
+							break;
+						case 'boolean':
+							assert.strictEqual(typeof response[prop], 'boolean', '"' + prop + '" was expected to be a boolean, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
+							break;
+						case 'object':
+							assert.strictEqual(typeof response[prop], 'object', '"' + prop + '" was expected to be an object, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
+							compare(schema[prop], response[prop], context ? [context, prop].join('.') : prop);
+							break;
+						case 'array':
+							assert.strictEqual(Array.isArray(response[prop]), true, '"' + prop + '" was expected to be an array, but was ' + typeof response[prop] + ' instead (path: ' + path + ', context: ' + context + ')');
 
-						if (schema[prop].items) {
+							if (schema[prop].items) {
 							// Ensure the array items have a schema defined
-							assert(schema[prop].items.type || schema[prop].items.allOf, '"' + prop + '" is defined to be an array, but its items have no schema defined (path: ' + path + ', context: ' + context + ')');
+								assert(schema[prop].items.type || schema[prop].items.allOf, '"' + prop + '" is defined to be an array, but its items have no schema defined (path: ' + path + ', context: ' + context + ')');
 
-							// Compare types
-							if (schema[prop].items.type === 'object' || Array.isArray(schema[prop].items.allOf)) {
-								response[prop].forEach((res) => {
-									compare(schema[prop].items, res, context ? [context, prop].join('.') : prop);
-								});
-							} else if (response[prop].length) { // for now
-								response[prop].forEach((item) => {
-									assert.strictEqual(typeof item, schema[prop].items.type, '"' + prop + '" should have ' + schema[prop].items.type + ' items, but found ' + typeof items + ' instead (path: ' + path + ', context: ' + context + ')');
-								});
+								// Compare types
+								if (schema[prop].items.type === 'object' || Array.isArray(schema[prop].items.allOf)) {
+									response[prop].forEach((res) => {
+										compare(schema[prop].items, res, context ? [context, prop].join('.') : prop);
+									});
+								} else if (response[prop].length) { // for now
+									response[prop].forEach((item) => {
+										assert.strictEqual(typeof item, schema[prop].items.type, '"' + prop + '" should have ' + schema[prop].items.type + ' items, but found ' + typeof items + ' instead (path: ' + path + ', context: ' + context + ')');
+									});
+								}
 							}
-						}
-						break;
+							break;
 					}
 				}
 			});
@@ -176,15 +186,15 @@ describe('Read API', async () => {
 					assert(param.example !== null && param.example !== undefined, path + ' has parameters without examples');
 
 					switch (param.in) {
-					case 'path':
-						testPath = testPath.replace('{' + param.name + '}', param.example);
-						break;
-					case 'header':
-						headers[param.name] = param.example;
-						break;
-					case 'query':
-						qs[param.name] = param.example;
-						break;
+						case 'path':
+							testPath = testPath.replace('{' + param.name + '}', param.example);
+							break;
+						case 'header':
+							headers[param.name] = param.example;
+							break;
+						case 'query':
+							qs[param.name] = param.example;
+							break;
 					}
 				});
 			}

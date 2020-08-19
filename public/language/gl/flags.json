@@ -32,6 +32,10 @@
 	"view-profile": "Ver perfil",
 	"start-new-chat": "Comezar novo chat",
 	"go-to-target": "Ver contido marcado",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Ver perfil",
 	"user-edit": "Editar perfil",
@@ -41,7 +45,6 @@
 	"no-notes": "Ningunha nota foi compartida",
 
 	"history": "Account &amp; Flag History",
-	"back": "Voltar á lista de avisos",
 	"no-history": "Non hai historial de avisos",
 
 	"state-all": "Tódolos estados",

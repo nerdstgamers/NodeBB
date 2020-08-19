@@ -32,6 +32,10 @@
 	"view-profile": "프로필 보기",
 	"start-new-chat": "새로운 채팅 시작",
 	"go-to-target": "신고된 게시물 바로가기",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "프로필 보기",
 	"user-edit": "프로필 수정",
@@ -41,7 +45,6 @@
 	"no-notes": "공유된 노트가 없습니다.",
 
 	"history": "Account &amp; Flag History",
-	"back": "신고 목록으로 돌아가기",
 	"no-history": "신고 기록들이 없습니다.",
 
 	"state-all": "모든 상태",

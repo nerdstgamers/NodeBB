@@ -32,6 +32,10 @@
 	"view-profile": "Skatīt profilu",
 	"start-new-chat": "Sākt jaunu sarunu",
 	"go-to-target": "Skatīt atzīmēto rakstu",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Skatīt profilu",
 	"user-edit": "Rediģēt profilu",
@@ -41,7 +45,6 @@
 	"no-notes": "Nav kopīgu piezīmju.",
 
 	"history": "Account &amp; Flag History",
-	"back": "Atpakaļ uz atzīmju sarakstu",
 	"no-history": "Nav atzīmju vēsture.",
 
 	"state-all": "Visi stāvokļi",

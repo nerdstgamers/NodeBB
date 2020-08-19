@@ -116,7 +116,7 @@ Plugins.reload = async function () {
 	}
 
 	// If some plugins are incompatible, throw the warning here
-	if (Plugins.versionWarning.length && nconf.get('isPrimary') === 'true') {
+	if (Plugins.versionWarning.length && nconf.get('isPrimary')) {
 		console.log('');
 		winston.warn('[plugins/load] The following plugins may not be compatible with your version of NodeBB. This may cause unintended behaviour or crashing. In the event of an unresponsive NodeBB caused by this plugin, run `./nodebb reset -p PLUGINNAME` to disable it.');
 		for (var x = 0, numPlugins = Plugins.versionWarning.length; x < numPlugins; x += 1) {
@@ -291,7 +291,7 @@ Plugins.showInstalled = async function () {
 			pluginData.error = false;
 			return pluginData;
 		} catch (err) {
-			winston.error(err);
+			winston.error(err.stack);
 		}
 	}
 	const plugins = await Promise.all(pluginPaths.map(file => load(file)));

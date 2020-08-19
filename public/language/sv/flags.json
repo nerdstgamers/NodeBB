@@ -32,6 +32,10 @@
 	"view-profile": "Visa profil",
 	"start-new-chat": "Påbörja ny chatt",
 	"go-to-target": "Visa flaggans ämne",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Visa profil",
 	"user-edit": "Redigera profil",
@@ -41,7 +45,6 @@
 	"no-notes": "Inga delade anteckningar.",
 
 	"history": "Account &amp; Flag History",
-	"back": "Tillbaks till flagglista",
 	"no-history": "Ingen flagghitorik.",
 
 	"state-all": "Alla status",

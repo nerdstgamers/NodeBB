@@ -1,8 +1,9 @@
 {
 	"global": "Global",
 	"global.no-users": "Não existem privilégios globais específicos para utilizadores.",
-	"group-privileges": "Group Privileges",
-	"user-privileges": "User Privileges",
+	"admin": "Admin",
+	"group-privileges": "Privilégios de Grupos",
+	"user-privileges": "Privilégios de Utilizadores",
 	"chat": "Conversa",
 	"upload-images": "Enviar Imagens",
 	"upload-files": "Enviar Ficheiros",
@@ -16,7 +17,7 @@
 	"view-groups": "Ver Grupos",
 	"allow-local-login": "Início de Sessão Local",
 	"allow-group-creation": "Criar Grupos",
-	"view-users-info": "View Users Info",
+	"view-users-info": "Ver Informação dos Utilizadores",
 	"find-category": "Encontrar Categoria",
 	"access-category": "Aceder à Categoria",
 	"access-topics": "Aceder aos Tópicos",
@@ -31,5 +32,11 @@
 	"downvote-posts": "Votar negativamente",
 	"delete-topics": "Apagar Tópicos",
 	"purge": "Eliminar",
-	"moderate": "Moderar"
+	"moderate": "Moderar",
+
+	"admin-dashboard": "Dashboard",
+	"admin-categories": "Categories",
+	"admin-privileges": "Privileges",
+	"admin-users": "Users",
+	"admin-settings": "Settings"
 }

@@ -32,6 +32,10 @@
 	"view-profile": "צפה בפרופיל",
 	"start-new-chat": "התחל שיחה חדשה",
 	"go-to-target": "צפה במטרת הסימון",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "צפה בפרופיל",
 	"user-edit": "ערוך פרופיל",
@@ -41,7 +45,6 @@
 	"no-notes": "אין הערות",
 
 	"history": "Account &amp; Flag History",
-	"back": "חזרה לרשימת הסימונים",
 	"no-history": "אין הסיטוריית סימונים",
 
 	"state-all": "כל המצבים",

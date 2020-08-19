@@ -56,7 +56,7 @@ function topicRoutes(app, middleware, controllers) {
 
 function postRoutes(app, middleware, controllers) {
 	const middlewares = [middleware.maintenanceMode, middleware.registrationComplete, middleware.pluginHooks];
-	app.get('/post/:pid', middleware.busyCheck, middleware.buildHeader, middlewares, controllers.posts.redirectToPost);
+	app.get('/post/:pid', middleware.busyCheck, middlewares, controllers.posts.redirectToPost);
 	app.get('/api/post/:pid', middlewares, controllers.posts.redirectToPost);
 }
 
@@ -98,8 +98,8 @@ module.exports = async function (app, middleware) {
 	var ensureLoggedIn = require('connect-ensure-login');
 
 	router.all('(/+api|/+api/*?)', middleware.prepareAPI);
-	router.all('(/+api/admin|/+api/admin/*?)', middleware.isAdmin);
-	router.all('(/+admin|/+admin/*?)', ensureLoggedIn.ensureLoggedIn(nconf.get('relative_path') + '/login?local=1'), middleware.applyCSRF, middleware.isAdmin);
+	router.all('(/+api/admin|/+api/admin/*?)', middleware.admin.checkPrivileges);
+	router.all('(/+admin|/+admin/*?)', ensureLoggedIn.ensureLoggedIn(nconf.get('relative_path') + '/login?local=1'), middleware.applyCSRF, middleware.admin.checkPrivileges);
 
 	app.use(middleware.stripLeadingSlashes);
 

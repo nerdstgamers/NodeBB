@@ -32,6 +32,10 @@
 	"view-profile": "Просмотреть профиль",
 	"start-new-chat": "Начать новый чат",
 	"go-to-target": "Показать предмет жалобы",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Delete Post",
+	"purge-post": "Purge Post",
+	"restore-post": "Restore Post",
 
 	"user-view": "Открыть профиль",
 	"user-edit": "Изменить профиль",
@@ -41,7 +45,6 @@
 	"no-notes": "Нет примечаний.",
 
 	"history": "Account &amp; Flag History",
-	"back": "Вернуться к списку жалоб",
 	"no-history": "Нет истории жалобы.",
 
 	"state-all": "Все состояния",

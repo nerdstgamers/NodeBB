@@ -48,7 +48,11 @@ module.exports = function (Topics) {
 				'cid:' + topicData.cid + ':tids',
 				'cid:' + topicData.cid + ':uid:' + topicData.uid + ':tids',
 			], timestamp, topicData.tid),
-			db.sortedSetAdd('cid:' + topicData.cid + ':tids:votes', 0, topicData.tid),
+			db.sortedSetsAdd([
+				'topics:views', 'topics:posts', 'topics:votes',
+				'cid:' + topicData.cid + ':tids:votes',
+				'cid:' + topicData.cid + ':tids:posts',
+			], 0, topicData.tid),
 			categories.updateRecentTid(topicData.cid, topicData.tid),
 			user.addTopicIdToUser(topicData.uid, topicData.tid, timestamp),
 			db.incrObjectField('category:' + topicData.cid, 'topic_count'),
@@ -68,7 +72,7 @@ module.exports = function (Topics) {
 			data.content = utils.rtrim(data.content);
 		}
 		check(data.title, meta.config.minimumTitleLength, meta.config.maximumTitleLength, 'title-too-short', 'title-too-long');
-		check(data.tags, meta.config.minimumTagsPerTopic, meta.config.maximumTagsPerTopic, 'not-enough-tags', 'too-many-tags');
+		await Topics.validateTags(data.tags, data.cid);
 		check(data.content, meta.config.minimumPostLength, meta.config.maximumPostLength, 'content-too-short', 'content-too-long');
 
 		const [categoryExists, canCreate, canTag] = await Promise.all([

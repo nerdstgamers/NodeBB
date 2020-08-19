@@ -85,7 +85,7 @@ function activate(plugin) {
 		},
 	], function (err) {
 		if (err) {
-			winston.error('An error occurred during plugin activation', err);
+			winston.error('An error occurred during plugin activation', err.stack);
 			throw err;
 		}
 		process.exit(0);
@@ -175,15 +175,15 @@ function info() {
 			var config = require('../../config.json');
 
 			switch (config.database) {
-			case 'redis':
-				console.log('        version: ' + info.redis_version);
-				console.log('        disk sync:  ' + info.rdb_last_bgsave_status);
-				break;
+				case 'redis':
+					console.log('        version: ' + info.redis_version);
+					console.log('        disk sync:  ' + info.rdb_last_bgsave_status);
+					break;
 
-			case 'mongo':
-				console.log('        version: ' + info.version);
-				console.log('        engine:  ' + info.storageEngine);
-				break;
+				case 'mongo':
+					console.log('        version: ' + info.version);
+					console.log('        engine:  ' + info.storageEngine);
+					break;
 			}
 
 			next();
@@ -219,7 +219,7 @@ function info() {
 function buildWrapper(targets, options) {
 	build.build(targets, options, function (err) {
 		if (err) {
-			winston.error(err);
+			winston.error(err.stack);
 			process.exit(1);
 		}
 		process.exit(0);

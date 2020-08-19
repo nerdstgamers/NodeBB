@@ -27,11 +27,15 @@
 	"filter-cid-all": "Wszystkie kategorie",
 	"apply-filters": "Zastosuj filtry",
 
-	"quick-actions": "Quick Actions",
+	"quick-actions": "Szybkie Akcje",
 	"flagged-user": "Oflagowany użytkownik",
 	"view-profile": "Zobacz profil",
 	"start-new-chat": "Rozpocznij nowy czat",
 	"go-to-target": "Zobacz cel flagowania",
+	"assign-to-me": "Assign To Me",
+	"delete-post": "Usuń post",
+	"purge-post": "Wyczyść post",
+	"restore-post": "Przywróć post",
 
 	"user-view": "Zobacz profil",
 	"user-edit": "Edytuj profil",
@@ -40,8 +44,7 @@
 	"add-note": "Dodaj notatkę",
 	"no-notes": "Brak udostępnionych notatek",
 
-	"history": "Account &amp; Flag History",
-	"back": "Wróć do listy flag",
+	"history": "Konto i historia flag",
 	"no-history": "Brak historii flag",
 
 	"state-all": "Wszystkie stany",
