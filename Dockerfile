@@ -19,6 +19,6 @@ ENV NODE_ENV=production \
     daemon=false \
     silent=false
 
-EXPOSE 4567
+EXPOSE 8080
 
-CMD node ./nodebb activate nodebb-plugin-write-api;node ./nodebb activate nodebb-plugin-session-sharing; node ./nodebb build ;  node ./nodebb start
+CMD node loader.js --no-daemon
