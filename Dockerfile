@@ -21,4 +21,6 @@ ENV NODE_ENV=production \
 
 EXPOSE 8080
 
+RUN node ./nodebb build 
+
 CMD node loader.js --no-daemon
