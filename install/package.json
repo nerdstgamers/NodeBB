@@ -80,7 +80,7 @@
         "morgan": "^1.10.0",
         "mousetrap": "^1.6.5",
         "nconf": "^0.10.0",
-        "nodebb-plugin-cloudstorage": "^1.0.16",
+        "nodebb-plugin-cloudstorage": "github:nerdstgamers/nodebb-plugin-cloudstorage",
         "nodebb-plugin-composer-default": "6.3.50",
         "nodebb-plugin-dbsearch": "4.1.1",
         "nodebb-plugin-emoji": "^3.3.0",
