@@ -17,6 +17,9 @@ const config = {
     database,
     uri
   },
+  'socket.io': {
+    transports: ['polling']
+  },
   port
 }
 
