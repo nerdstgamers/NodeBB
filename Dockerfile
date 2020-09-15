@@ -23,4 +23,6 @@ EXPOSE 8080
 
 RUN node ./nodebb build 
 
+COPY install/assets/favicon.ico /usr/src/app/public/uploads/system/favicon.ico
+
 CMD node loader.js --no-daemon
